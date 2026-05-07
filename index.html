@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Simples</title>
+    <style>
+        body {display: flex; justify-content: center; align-items: center; height: 100vh; background: #727171;}
+        .calculadora {background: #2c2c2c; padding: 20px; border-radius: 10px; width: 300px; 
+        box-shadow: 0 0 10px rgba(0,0,0,0,5);}
+        #visor { width: 93%; height: 60px; font-size: 30px; text-align: right; margin-bottom: 10px;padding: 10px; border: none; border-radius: 5px;}
+        .botoes {display: grid;grid-template-columns: repeat(4, 1fr); gap: 10px;}
+        button {height: 50px; font-size: 23px; border: none; border-radius: 5px; cursor: pointer;}button:hover {opacity: 0.8;}
+        .num {background: #444; color: white;}
+        .op {background: orange; color: white;}
+        .igual { background: #28a745; color: white; grid-column: span 3; font-size: 22px;}
+        .clear { background: red; color: white;}
+        button:hover {opacity: 0.8;}
+        
+    </style>
+</head>
+<body>
+    <div class="calculadora">
+        <input type="text" id="visor" readonly>
+        <div class="botoes">
+            <button class="num" onclick="inserir(7)">7</button>
+            <button class="num" onclick="inserir(8)">8</button>
+            <button class="num" onclick="inserir(9)">9</button>
+            <button style="background-color: red; color: white;" onclick="limpar()">C</button>
+            
+            <button class="num" onclick="inserir(4)">4</button>
+            <button class="num" onclick="inserir(5)">5</button>
+            <button class="num" onclick="inserir(6)">6</button>
+            <button class="op" onclick="operadores('+')">+</button>
+            
+            <button class="num" onclick="inserir(1)">1</button>
+            <button class="num" onclick="inserir(2)">2</button>
+            <button class="num" onclick="inserir(3)">3</button>
+            <button class="op" onclick="operadores('-')">-</button>
+            
+            <button class="num" onclick="inserir(0)">0</button>
+            <button onclick="inserir('.')">.</button>
+            
+            <button class="op" onclick="operadores('÷')">÷</button>
+            
+            <button class="op" onclick="operadores('x')">x</button>
+            <button class="clear" onclick="apagar()">&lArr;</button>
+            <button class="igual" onclick="calcular()">=</button>
+
+        </div>
+
+    </div>
+    <script>
+        let valorAtual = '';
+        let valorAnterior = '';
+        let operador = null;
+        let expressao = '';
+
+        let visor = document.getElementById('visor');
+
+        
+        function inserir(valor) {
+            if (valor === '.' && valorAtual.includes('.')) return;
+            
+            valorAtual += valor;
+            visor.value = expressao + valorAtual;
+                    
+        }
+
+        function operadores(op) {
+            if (valorAtual ===  '') return;
+            
+        if (valorAnterior !== '') calcular()
+
+        valorAnterior = valorAtual;
+        operador = op;
+        valorAtual = '';
+        expressao = valorAnterior + '' + op + '';
+        valorAtual = '';
+        visor.value = expressao + valorAtual;
+        }
+
+        function limpar() {
+            valorAtual = '';
+            valorAnterior = '';
+            expressao = '';
+            operador = null;
+            visor.value = '';
+
+        }
+        function apagar() {
+            
+             // Caso 1: apagando número
+            if (valorAtual !== '') {
+            valorAtual = valorAtual.slice(0, -1);
+            visor.value = valorAtual;
+            return;
+            }
+
+            // Caso 2: apagando operador
+            if (operador !== null) {
+            operador = null;
+            valorAtual = valorAnterior;
+            valorAnterior = '';
+            visor.value = valorAtual;
+            }
+
+        }
+        function calcular() {
+            let resultado;
+            let anterior = parseFloat(valorAnterior);
+            let atual = parseFloat(valorAtual);
+
+            if (isNaN(anterior) || isNaN(atual)) return;
+        
+        switch (operador) {
+            case '+': 
+            resultado = anterior + atual;
+            break;
+            case '-': 
+            resultado = anterior - atual;
+            break;
+            case 'x': 
+            resultado = anterior * atual;
+            break;
+            case '÷': 
+            if (atual === 0) {
+                visor.value = "Erro:";
+                return;
+            }
+            resultado = anterior / atual;
+            break;
+            
+            default:
+                return;
+        }
+        if (!Number.isInteger(resultado)) {
+            resultado = parseFloat(resultado.toFixed(2));
+            }
+
+        visor.value = expressao + valorAtual + " = " + resultado;
+
+        valorAtual = resultado.toString();
+        valorAnterior = '';
+        resultado = resultado.toFixed(2);
+        operador = null;
+        expressao = '';
+        
+        } 
+        
+    </script>
+</body>
+</html>
