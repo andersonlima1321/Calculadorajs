@@ -9,9 +9,9 @@ O sistema permite fazer calculos simples:
 - divição
 
   ## Tecnologias
-  -HTML
-  -CSS
-  -Javascript
+  - HTML
+  - CSS
+  - Javascript
 
   ### Calculos feito:
   - sem "eval
